@@ -42,6 +42,7 @@ public class Playerbehaviour : MonoBehaviour
 
     private void JumpOnPerformed(InputAction.CallbackContext obj)
     {
+        myAnimator.SetBool("isJumping", true);
         if (isOnGround)
         {
             myRigidbody.AddForce(Vector2.up * jumpforce, ForceMode2D.Impulse);
@@ -83,5 +84,6 @@ public class Playerbehaviour : MonoBehaviour
 
             isOnGround = true;
         }
+        myAnimator.SetBool("isJumping", false);
     }
 }
