@@ -8,12 +8,14 @@ public class Playerbehaviour : MonoBehaviour
 {
     [SerializeField] private float speed;
     [SerializeField] private float maxSpeed;
+    [SerializeField] private float jumpforce;
+    [SerializeField] private LayerMask ground;
     private Inputs inputs;
     private Vector2 direction;
-
     private Rigidbody2D myRigidbody;
     private Animator myAnimator;
     private SpriteRenderer myRenderer;
+    private bool isOnGround = false;
 
     private void OnEnable()
     {
@@ -24,6 +26,7 @@ public class Playerbehaviour : MonoBehaviour
         myRigidbody = GetComponent<Rigidbody2D>();
         myAnimator = GetComponent<Animator>();
         myRenderer = GetComponent<SpriteRenderer>();
+        inputs.player.Jump.performed += JumpOnPerformed;
     }
 
     private void OnMoveCanceled(InputAction.CallbackContext obj)
@@ -35,6 +38,15 @@ public class Playerbehaviour : MonoBehaviour
     {
         direction = obj.ReadValue<Vector2>();
         Debug.Log(direction);
+    }
+
+    private void JumpOnPerformed(InputAction.CallbackContext obj)
+    {
+        if (isOnGround)
+        {
+            myRigidbody.AddForce(Vector2.up * jumpforce, ForceMode2D.Impulse);
+            isOnGround = false;
+        }
     }
     // Start is called before the first frame update
     void Start()
@@ -60,5 +72,16 @@ public class Playerbehaviour : MonoBehaviour
             myRenderer.flipX = false;
         }
 
+    }
+    private void OnCollisionEnter2D(Collision2D other)
+    {
+        var touchGround = ground == (ground | (1 << other.gameObject.layer));
+        var touchFromAbove = other.contacts[0].normal == Vector2.up;
+       if (touchGround && touchFromAbove )
+       //if (other.gameObject.CompareTag("Ground") == true)
+        {
+
+            isOnGround = true;
+        }
     }
 }
