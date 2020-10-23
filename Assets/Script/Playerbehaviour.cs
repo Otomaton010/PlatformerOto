@@ -16,6 +16,7 @@ public class Playerbehaviour : MonoBehaviour
     private Animator myAnimator;
     private SpriteRenderer myRenderer;
     private bool isOnGround = false;
+    private bool isPasVraimentOnGround = false;
 
     private void OnEnable()
     {
@@ -52,13 +53,11 @@ public class Playerbehaviour : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-       // GetComponent<Animator>().SetBool("IsWalking", true);
     }
 
     void FixedUpdate()
     {
         direction.y = 0;
-        //myRigidBody.velocity = direction;
         if (myRigidbody.velocity.sqrMagnitude < maxSpeed)
             myRigidbody.AddForce(direction * speed);
         // si ma valeur est différente de 0 alors je peux courir
@@ -72,14 +71,20 @@ public class Playerbehaviour : MonoBehaviour
         {
             myRenderer.flipX = false;
         }
+        // permet de pas resté scotché au mur
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, -Vector2.up);
+
+        if (hit.collider != null)
+        {
+            //si je ne suis pas vraiment sur le sol
+            isPasVraimentOnGround = true;
+        }
 
     }
     private void OnCollisionEnter2D(Collision2D other)
     {
         var touchGround = ground == (ground | (1 << other.gameObject.layer));
-        var touchFromAbove = other.contacts[0].normal == Vector2.up;
-       if (touchGround && touchFromAbove )
-       //if (other.gameObject.CompareTag("Ground") == true)
+       if (touchGround && isPasVraimentOnGround )
         {
 
             isOnGround = true;
