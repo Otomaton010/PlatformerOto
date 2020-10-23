@@ -42,15 +42,15 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
-  - name: plants
-    uniqueID: 3494539493
-    locked: 0
   - name: background
     uniqueID: 2118058201
     locked: 0
-  - name: player
-    uniqueID: 3095326189
-    locked: 0
   - name: Ground
     uniqueID: 233706643
+    locked: 0
+  - name: plants
+    uniqueID: 3494539493
+    locked: 0
+  - name: player
+    uniqueID: 3095326189
     locked: 0
